@@ -1,0 +1,46 @@
+import requests
+
+url = "https://corona-virus-world-and-india-data.p.rapidapi.com/api_india"
+
+headers = {
+    'x-rapidapi-key': "f138dc70f4msh519128d96430f15p1ef201jsn7c0ed73b9015",
+    'x-rapidapi-host': "corona-virus-world-and-india-data.p.rapidapi.com"
+    }
+
+response = requests.request("GET", url, headers=headers).json()
+
+def search_by_city_conf(city_name):
+    for each in response['state_wise']:
+        if int(response['state_wise'][each]['confirmed']) !=0:
+            for city in response['state_wise'][each]['district']:
+                if city.lower() == city_name.lower():
+                    return response['state_wise'][each]['district'][city]['confirmed']
+
+def search_by_city(city_name):
+    for each in response['state_wise']:
+        if int(response['state_wise'][each]['active']) !=0:
+            for city in response['state_wise'][each]['district']:
+                if city.lower() == city_name.lower():
+                    return response['state_wise'][each]['district'][city]['active']
+
+def search_by_city_deat(city_name):
+    for each in response['state_wise']:
+        if int(response['state_wise'][each]['recovered']) !=0:
+            for city in response['state_wise'][each]['district']:
+                if city.lower() == city_name.lower():
+                    return response['state_wise'][each]['district'][city]['recovered']
+
+
+flag =1
+while flag!=0:
+    city_name = input("Entar a city name : ")
+    if city_name == "0":
+        break
+    cases = search_by_city(city_name)
+    print("Total number  corona of  active cases " +city_name+ " is: ",cases)
+    confirmed = search_by_city_conf(city_name)
+    print("Total number  corona of confirm cases "+city_name+ " is: ",confirmed)
+    detha = search_by_city_deat(city_name)
+    print("Total number corona of cases recover in "+city_name+ " is: ",detha)
+    death=str(confirmed-cases-detha)
+    print("Total number corona of Death cases " +city_name+ " is: ",death)
